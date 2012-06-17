@@ -1,9 +1,9 @@
-# malarm_test - UI test of malarm application
+# malarm_scirocco_test - UI test of malarm application
 ## What is this?
 
-This is a UI test of malarm using Robotium library. This is submodule of
-malarm.
+This is a UI test of malarm using scirocco and Robotium library.
 
+TODO: update following sections... -------------
 ## How to clone
 1. Clone malarm
  git clone git://github.com/mamewotoko/malarm.git malarm
