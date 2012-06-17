@@ -4,7 +4,7 @@
 This is a UI test of malarm using scirocco and Robotium library.
 
 TODO: update following sections... -------------
-## How to clone
+## How to clone: TODO: update
 1. Clone malarm
  git clone git://github.com/mamewotoko/malarm.git malarm
 2. In cloned directory, clone submoudle
@@ -14,7 +14,7 @@ TODO: update following sections... -------------
 3. malarm_test is cloned in test/malarm_test directory.
 
 ## How to run:
-1. Download robotium-solo-xx.jar file
+1. Download robotium-solo-xx.jar and scirocco_2.0.jar file
  e.g. execute libs/setup.sh in lib directory
 
 2. Put robotium-solo-xx.jar into libs directory
@@ -27,18 +27,11 @@ Malarm source repository: git://github.com/mamewotoko/malarm.git
 6. Run as Android JUnit test
 
 ## How to start testing from the command line
-    ant test
-
-or
-    adb shell am instrument -w com.mamewo.malarm_test/android.test.InstrumentationTestRunner
+Run this application via Eclipse as "Scirocco JUnit Run"
 
 ## TODO
-- merge capture code (mimicj) or use scirocco
- http://code.google.com/p/scirocco/wiki/QuickStartScirocco_JP
-- give test parameter from child class and test in abstract parent class
-- check version of malarm before testing
-- fix setAlarm test
-- 
+- Configure as submodule of malarm_test
+- Update this document
 
 ## memo
 - command line from build to test
