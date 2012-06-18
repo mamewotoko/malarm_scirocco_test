@@ -1,42 +1,39 @@
 # malarm_scirocco_test - UI test of malarm application
 ## What is this?
 
-This is a UI test of malarm using scirocco and Robotium library.
+This is a UI test of malarm using Scirocco and Robotium library.
 
-TODO: update following sections... -------------
-## How to clone: TODO: update
+## How to clone
 1. Clone malarm
- git clone git://github.com/mamewotoko/malarm.git malarm
-2. In cloned directory, clone submoudle
+    git clone git://github.com/mamewotoko/malarm.git malarm
+2. In the cloned directory, clone submoudle
  cd malarm
  git submodule init
  git submodule update
-3. malarm_test is cloned in test/malarm_test directory.
-
-## How to run:
-1. Download robotium-solo-xx.jar and scirocco_2.0.jar file
+3. malarm_scirocco_test is cloned in test/malarm_scirocco_test directory.
+4. put local.propeties file which specifes sdk.dir
+5. Download robotium-solo-xx.jar and scirocco_2.0.jar file 
  e.g. execute libs/setup.sh in lib directory
 
-2. Put robotium-solo-xx.jar into libs directory
-3. Deploy Malarm application
+## How to run:
+### Eclipse
+4. Start eclipse and add libs/robotium-solo-xx.jar and scirocco_2.0.jar into build path
+5. Build (Run as Android JUnit test?)
+6. Run as Scirocco JUnit Test
+7. report.html is located in the scirocco directory
 
-Malarm source repository: git://github.com/mamewotoko/malarm.git
-
-4. Start eclipse and add libs/robotium-solo-xx.jar into build path
-5. Build
-6. Run as Android JUnit test
-
-## How to start testing from the command line
-Run this application via Eclipse as "Scirocco JUnit Run"
+### ant
+1. Connect device using USB cable or start android emulator
+2. Build debug apk and install it by the following command line
+    ant debug install
+3. Start testing by the following command line
+    ant test
+4. Screen shot is stored in scricco directory of SD card of target device
 
 ## TODO
-- Configure as submodule of malarm_test
-- Update this document
+- get memory info?
 
 ## memo
-- command line from build to test
-ant debug
-ant installd test
 - monkey test (random UI test)
 adb shell monkey -p com.mamewo.malarm24 -v 10000
 - EMMA (code coverage)
@@ -48,12 +45,8 @@ ant emma installd
 -- coverage output is stored as coverage/index.html.
 
 ## Reference
-- Robotium:
-http://code.google.com/p/robotium/
-- How to use ddmslib to capture screen shot
-http://blog.codetastrophe.com/2008/12/using-androiddebugbridge-api-to-get.html
-- Screenshots with Android NativeDriver - internals
-http://nativedriver.googlecode.com/files/Screenshot_on_Android_Internals.pdf
+- Robotium: http://code.google.com/p/robotium/
+- Scricco: http://code.google.com/p/scirocco/
 
 ----
 Takashi Masuyama < mamewotoko@gmail.com >  
