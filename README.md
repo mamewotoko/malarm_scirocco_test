@@ -19,7 +19,7 @@ This is a UI test of malarm using Scirocco and Robotium library.
 5. Download robotium-solo-xx.jar and scirocco_2.0.jar file 
  e.g. execute libs/setup.sh in lib directory
 
- How to run:
+How to run:
 --------------------
 ### Eclipse
 4. Start eclipse and add libs/robotium-solo-xx.jar and scirocco_2.0.jar into build path
@@ -35,26 +35,26 @@ This is a UI test of malarm using Scirocco and Robotium library.
     ant test
 4. Screen shot is stored in scricco directory of SD card of target device
 
- TODO
+TODO
 --------------------
-- get memory info?
+* get memory info?
 
- Memo
+Memo
 --------------------
-- monkey test for android app (random UI test)
+* monkey test for android app (random UI test)
 adb shell monkey -p com.mamewo.malarm24 -v 10000
-- EMMA (code coverage)
--- build malarm with emma
-ant emma debug 
--- install malarm
-ant debug
-ant emma installd
--- coverage output is stored as coverage/index.html.
+* EMMA (code coverage)
+    * build malarm with emma
+    ant emma debug 
+    *  install malarm
+    ant debug
+    ant emma installd
+    * coverage output is stored as coverage/index.html.
 
  Reference
 --------------------
-- Robotium: http://code.google.com/p/robotium/
-- Scirocco: http://code.google.com/p/scirocco/
+* Robotium: http://code.google.com/p/robotium/
+* Scirocco: http://code.google.com/p/scirocco/
 
 ----
 Takashi Masuyama < mamewotoko@gmail.com >  
