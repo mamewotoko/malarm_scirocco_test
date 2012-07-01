@@ -1,9 +1,13 @@
-# malarm_scirocco_test - UI test of malarm application
-## What is this?
+===============================================================================
+ malarm_scirocco_test - UI test of malarm application
+===============================================================================
 
+ What is this?
+--------------------
 This is a UI test of malarm using Scirocco and Robotium library.
 
-## How to clone
+ How to clone
+--------------------
 1. Clone malarm
     git clone git://github.com/mamewotoko/malarm.git malarm
 2. In the cloned directory, clone submoudle
@@ -15,7 +19,8 @@ This is a UI test of malarm using Scirocco and Robotium library.
 5. Download robotium-solo-xx.jar and scirocco_2.0.jar file 
  e.g. execute libs/setup.sh in lib directory
 
-## How to run:
+ How to run:
+--------------------
 ### Eclipse
 4. Start eclipse and add libs/robotium-solo-xx.jar and scirocco_2.0.jar into build path
 5. Build (Run as Android JUnit test?)
@@ -30,11 +35,13 @@ This is a UI test of malarm using Scirocco and Robotium library.
     ant test
 4. Screen shot is stored in scricco directory of SD card of target device
 
-## TODO
+ TODO
+--------------------
 - get memory info?
 
-## memo
-- monkey test (random UI test)
+ Memo
+--------------------
+- monkey test for android app (random UI test)
 adb shell monkey -p com.mamewo.malarm24 -v 10000
 - EMMA (code coverage)
 -- build malarm with emma
@@ -44,9 +51,10 @@ ant debug
 ant emma installd
 -- coverage output is stored as coverage/index.html.
 
-## Reference
+ Reference
+--------------------
 - Robotium: http://code.google.com/p/robotium/
-- Scricco: http://code.google.com/p/scirocco/
+- Scirocco: http://code.google.com/p/scirocco/
 
 ----
 Takashi Masuyama < mamewotoko@gmail.com >  
