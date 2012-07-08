@@ -1,5 +1,6 @@
 package com.mamewo.malarm_scirocco_test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -8,13 +9,13 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.Smoke;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import asia.sonix.scirocco.SciroccoSolo;
 
 import com.jayway.android.robotium.solo.Solo;
 import com.mamewo.malarm24.*;
-import com.mamewo.malarm24.R;
 
 public class TestPortraitUI
 	extends ActivityInstrumentationTestCase2<MalarmActivity>
@@ -27,27 +28,6 @@ public class TestPortraitUI
 
 	private final static String TAG = "malarm_scirocco_test";
 	protected SciroccoSolo solo_;
-
-	private static class Name2Index {
-		String _name;
-		int _index;
-		
-		public Name2Index(String name, int index) {
-			_name = name;
-			_index = index;
-		}
-	}
-
-	private static Name2Index[] PREF_TABLE = null;
-
-	private int lookup(Name2Index[] table, String name) {
-		for (Name2Index entry : table) {
-			if (entry._name.equals(name)) {
-				return entry._index;
-			}
-		}
-		throw new RuntimeException("lookup: " + name + " is not found");
-	}
 	
 	public TestPortraitUI() {
 		super("com.mamewo.malarm24", MalarmActivity.class);
@@ -55,27 +35,7 @@ public class TestPortraitUI
 
 	@Override
 	public void setUp() throws Exception {
-		Log.i("malarm_test", "setUp is called " + PREF_TABLE);
 		solo_ = new SciroccoSolo(getInstrumentation(), getActivity(), "com.mamewo.malarm_test");
-		//static field is cleared to null, why?
-		//crete this table automatically
-		PREF_TABLE = new Name2Index[] {
-			new Name2Index("site", 0),
-			new Name2Index("playlist_directory", 1),
-			new Name2Index("sleep_playlist", 2),
-			new Name2Index("wakeup_playlist", 3),
-			new Name2Index("reload_playlist", 4),
-			new Name2Index("create_playlist", 5),
-			new Name2Index("sleep_time", 6),
-			new Name2Index("default_time", 7),
-			new Name2Index("vibration", 8),
-			new Name2Index("sleep_volume", 9),
-			new Name2Index("wakeup_volume", 10),
-			new Name2Index("clear_webview_cache", 11),
-			new Name2Index("help", 13),
-			new Name2Index("version", 14)
-		};
-		solo_.sleep(1000);
 	}
 
 	@Override
@@ -92,21 +52,50 @@ public class TestPortraitUI
 		super.tearDown();
 	} 
 
-	//name of test case MUST begin with "test"
+	public boolean selectPreference(int titleId) {
+		String targetTitle = solo_.getString(titleId);
+
+		TextView view = null;
+		do {
+			ArrayList<TextView> list = solo_.getCurrentTextViews(null);
+			for (TextView listText : list) {
+				Log.i(TAG, "listtext: " + listText.getText());
+				if(targetTitle.equals(listText.getText())){
+					view = listText;
+					break;
+				}
+			}
+		}
+		while(null == view && solo_.scrollDownList(0));
+		if (view == null) {
+			return false;
+		}
+		solo_.clickOnView(view);
+		return true;
+	}
+	
+	private void startPreferenceActivity() {
+		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
+		solo_.waitForActivity("MalarmPreference");
+		solo_.sleep(500);
+	}
+
 	@Smoke
 	public void testSetAlarm() throws Exception {
 		Date now = new Date(System.currentTimeMillis() + 60 * 1000);
 		solo_.setTimePicker(0, now.getHours(), now.getMinutes());
 		solo_.clickOnView(solo_.getView(R.id.alarm_button));
-		solo_.sleep(500);
+		solo_.sleep(2000);
 		TextView targetTimeLabel = (TextView)solo_.getView(R.id.target_time_label);
 		TextView sleepTimeLabel = (TextView)solo_.getView(R.id.sleep_time_label);
 		Assert.assertTrue("check wakeup label", targetTimeLabel.getText().length() > 0);
 		Assert.assertTrue("check sleep label", sleepTimeLabel.getText().length() > 0);
 		solo_.goBack();
 		solo_.sleep(61 * 1000);
+		//TODO: wait for activity?
 		Assert.assertTrue("Switch alarm button wording", solo_.searchToggleButton(solo_.getString(R.string.stop_alarm)));
 		Assert.assertTrue("Correct alarm toggle button state", solo_.isToggleButtonChecked(solo_.getString(R.string.stop_alarm)));
+		Assert.assertTrue("check sleep label after wakeup", sleepTimeLabel.getText().length() == 0);
 		//TODO: check music?
 		//TODO: check vibration
 		//TODO: check notification
@@ -160,12 +149,14 @@ public class TestPortraitUI
 
 	/////////////////
 	//test menu
+	@Smoke
 	public void testStopVibrationMenu() {
 		//TODO: cannot select menu by japanese, why?
 		solo_.clickOnMenuItem(solo_.getString(R.string.stop_vibration));
 		solo_.sleep(2000);
 	}
 	
+	@Smoke
 	public void testPlayMenu() {
 		solo_.clickOnMenuItem(solo_.getString(R.string.play_wakeup));
 		solo_.sleep(5000);
@@ -177,85 +168,123 @@ public class TestPortraitUI
 	//config screen
 	@Smoke
 	public void testSitePreference() throws Exception {
-		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
-		//select site configuration
-		//TODO: make function...
-		solo_.clickInList(lookup(PREF_TABLE, "site"));
-		Assert.assertTrue(true);
+		startPreferenceActivity();
+		selectPreference(R.string.playlist_path_title);
+		//TODO: add more specific assert
 		solo_.takeScreenShot();
 	}
 	
 	@Smoke
-	public void testCreatePlaylists() {
-		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
-		solo_.clickInList(lookup(PREF_TABLE, "create_playlist"));
+	public void testCreatePlaylists() throws Exception {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_create_playlist_title);
+		solo_.takeScreenShot();
 		solo_.sleep(5000);
 		Assert.assertTrue(true);
 	}
 	
 	@Smoke
 	public void testSleepVolume() {
-		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
-		solo_.clickInList(lookup(PREF_TABLE, "sleep_volume"));
-		//TODO: push plus/minus
-		Assert.assertTrue(true);
+		startPreferenceActivity();
+		selectPreference(R.string.pref_sleep_volume_title);
 	}
 
 	@Smoke
 	public void testWakeupVolume() {
-		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
-		solo_.clickInList(lookup(PREF_TABLE, "wakeup_volume"));
-		//TODO: push plus/minus
-		Assert.assertTrue(true);
+		startPreferenceActivity();
+		selectPreference(R.string.pref_wakeup_volume_title);
 	}
-
-	//add double tap test of webview
 	
 	@Smoke
-	public void testDefaultTimePreference() {
-		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
-		solo_.clickInList(lookup(PREF_TABLE, "default_time"));
-		Assert.assertTrue(true);
+	public void testVolumeDown() throws Exception{
+		startPreferenceActivity();
+		selectPreference(R.string.pref_wakeup_volume_title);
+		solo_.clickOnButton("-");
+		solo_.takeScreenShot();
+		solo_.clickOnButton("OK");
+		//TODO: check volume
+	}
+
+	@Smoke
+	public void testVolumeUp() throws Exception{
+		startPreferenceActivity();
+		selectPreference(R.string.pref_wakeup_volume_title);
+		solo_.clickOnButton("\\+");
+		solo_.takeScreenShot();
+		solo_.clickOnButton("OK");
+		//TODO: check volume
+	}
+
+
+	//add double tap test of webview
+	@Smoke
+	public void testDefaultTimePreference() throws Exception {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_default_time_title);
+		solo_.takeScreenShot();
+		//TODO: change time
 	}
 
 	@Smoke
 	public void testVibration() {
-		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
-		solo_.clickInList(lookup(PREF_TABLE, "vibration"));
+		startPreferenceActivity();
+		selectPreference(R.string.pref_vibration);
 		solo_.sleep(1000);
-		solo_.clickInList(lookup(PREF_TABLE, "vibration"));
 	}
 	
 	public void testSleepPlaylist() {
-		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
-		solo_.clickInList(lookup(PREF_TABLE, "sleep_playlist"));
-		solo_.scrollDown();
+		startPreferenceActivity();
+		selectPreference(R.string.pref_sleep_playlist);
+		solo_.waitForActivity("PlaylistViewer");
+		solo_.assertCurrentActivity("Playlist viewer should start", PlaylistViewer.class);
 	}
 	
+	public void testWakeupPlaylist() {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_wakeup_playlist);
+		solo_.waitForActivity("PlaylistViewer");
+		//TODO: check title
+		solo_.assertCurrentActivity("Playlist viewer should start", PlaylistViewer.class);
+	}
+	
+	@Smoke
+	public void testPlaylistLong() throws Throwable {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_sleep_playlist);
+		solo_.waitForActivity("PlaylistViewer");
+		solo_.clickLongInList(0);
+		//TODO: add check
+		solo_.takeScreenShot();
+	}
+
+	@Smoke
+	public void testReloadPlaylist() {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_reload_playlist);
+	}
+	
+	@Smoke
 	public void testClearCache() {
-		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
-		solo_.clickInList(lookup(PREF_TABLE, "clear_webview_cache"));
+		startPreferenceActivity();
+		selectPreference(R.string.pref_clear_webview_cache_title);
 		solo_.sleep(500);
 	}
-	
+
+
 	public void testHelp() throws Exception {
-		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
-		solo_.clickInList(lookup(PREF_TABLE, "help"));
+		startPreferenceActivity();
+		selectPreference(R.string.help_title);
 		solo_.sleep(4000);
 		solo_.takeScreenShot();
 	}
 	
 	public void testVersion() throws Exception {
-		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
-		solo_.clickInList(lookup(PREF_TABLE, "version"));
-		solo_.takeScreenShot();
-	}
-
-	public void testPlaylistLong() throws Exception {
-		solo_.clickOnMenuItem(solo_.getString(R.string.pref_menu));
-		solo_.clickInList(lookup(PREF_TABLE, "sleep_playlist"));
-		solo_.sleep(500);
-		solo_.clickLongInList(0);
+		startPreferenceActivity();
+		selectPreference(R.string.malarm_version_title);
+		ImageView view = solo_.getImage(1);
+		solo_.clickOnView(view);
+		//TODO: check that browser starts
+		solo_.sleep(4000);
 		solo_.takeScreenShot();
 	}
 	
