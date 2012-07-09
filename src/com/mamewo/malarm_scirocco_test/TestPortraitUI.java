@@ -169,11 +169,13 @@ public class TestPortraitUI
 	@Smoke
 	public void testSitePreference() throws Exception {
 		startPreferenceActivity();
-		selectPreference(R.string.playlist_path_title);
+		selectPreference(R.string.pref_webview_url);
 		solo_.sleep(500);
 		//TODO: add more specific assert
 		solo_.clickInList(0);
+		solo_.sleep(500);
 		solo_.clickInList(1);
+		solo_.sleep(500);
 		solo_.clickInList(2);
 		solo_.takeScreenShot();
 		solo_.clickOnButton("OK");
