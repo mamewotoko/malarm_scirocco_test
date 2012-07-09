@@ -13,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import asia.sonix.scirocco.SciroccoSolo;
-
-import com.jayway.android.robotium.solo.Solo;
 import com.mamewo.malarm24.*;
 
 public class TestPortraitUI
@@ -82,6 +80,15 @@ public class TestPortraitUI
 
 	@Smoke
 	public void testSetAlarm() throws Exception {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_sleeptime);
+		solo_.sleep(500);
+		solo_.scrollUpList(0);
+		solo_.scrollUpList(0);
+		solo_.scrollUpList(0);
+		//select 1 min
+		solo_.clickInList(0);
+		solo_.goBack();
 		Date now = new Date(System.currentTimeMillis() + 60 * 1000);
 		solo_.setTimePicker(0, now.getHours(), now.getMinutes());
 		solo_.clickOnView(solo_.getView(R.id.alarm_button));
@@ -91,7 +98,7 @@ public class TestPortraitUI
 		Assert.assertTrue("check wakeup label", targetTimeLabel.getText().length() > 0);
 		Assert.assertTrue("check sleep label", sleepTimeLabel.getText().length() > 0);
 		solo_.goBack();
-		solo_.sleep(61 * 1000);
+		solo_.sleep(70 * 1000);
 		//TODO: wait for activity?
 		Assert.assertTrue("Switch alarm button wording", solo_.searchToggleButton(solo_.getString(R.string.stop_alarm)));
 		Assert.assertTrue("Correct alarm toggle button state", solo_.isToggleButtonChecked(solo_.getString(R.string.stop_alarm)));
@@ -106,7 +113,7 @@ public class TestPortraitUI
 		Assert.assertTrue("check sleep label", sleepTimeLabel.getText().length() == 0);
 		Assert.assertTrue("Alarm stopped", !solo_.isToggleButtonChecked(solo_.getString(R.string.set_alarm)));
 	}
-	
+
 	@Smoke
 	public void testSetNow() throws Exception {
 		//cannot get timepicker of Xperia acro...
@@ -126,9 +133,6 @@ public class TestPortraitUI
 		View nextButton = solo_.getView(R.id.next_button);
 		solo_.clickOnView(nextButton);
 		solo_.sleep(2000);
-		//speech recognition dialog
-		//capture
-		solo_.sendKey(Solo.DELETE);
 	}
 
 	public void testNextTuneLong() {
@@ -153,13 +157,16 @@ public class TestPortraitUI
 	public void testStopVibrationMenu() {
 		//TODO: cannot select menu by japanese, why?
 		solo_.clickOnMenuItem(solo_.getString(R.string.stop_vibration));
-		solo_.sleep(2000);
+		solo_.sleep(500);
 	}
 	
 	@Smoke
 	public void testPlayMenu() {
 		solo_.clickOnMenuItem(solo_.getString(R.string.play_wakeup));
 		solo_.sleep(5000);
+		View nextButton = solo_.getView(R.id.next_button);
+		solo_.clickOnView(nextButton);
+		solo_.sleep(2000);
 		solo_.clickOnMenuItem(solo_.getString(R.string.stop_music));
 		solo_.sleep(1000);
 	}
@@ -283,6 +290,25 @@ public class TestPortraitUI
 		solo_.assertCurrentActivity("Playlist viewer should start", PlaylistViewer.class);
 	}
 	
+	public void savePlaylist() {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_wakeup_playlist);
+		solo_.waitForActivity("PlaylistViewer");
+		solo_.clickOnMenuItem(solo_.getString(R.string.save_playlist));
+	}
+	
+	@Smoke
+	public void testPlaylistSelectMusic() throws Throwable {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_sleep_playlist);
+		solo_.waitForActivity("PlaylistViewer");
+		solo_.clickInList(0);
+		solo_.sleep(500);
+		solo_.assertCurrentActivity("back to main scren", "MalarmActivity");
+		//TODO: add check
+		solo_.takeScreenShot();
+	}
+	
 	@Smoke
 	public void testPlaylistLong() throws Throwable {
 		startPreferenceActivity();
@@ -293,6 +319,42 @@ public class TestPortraitUI
 		solo_.takeScreenShot();
 	}
 
+	@Smoke
+	public void testPlaylistUp() throws Throwable {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_sleep_playlist);
+		solo_.waitForActivity("PlaylistViewer");
+		solo_.clickLongInList(1);
+		//up
+		solo_.clickInList(0);
+		//TODO: add check
+		solo_.takeScreenShot();
+	}
+
+	@Smoke
+	public void testPlaylistDown() throws Throwable {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_sleep_playlist);
+		solo_.waitForActivity("PlaylistViewer");
+		solo_.clickLongInList(0);
+		//up
+		solo_.clickInList(1);
+		//TODO: add check
+		solo_.takeScreenShot();
+	}
+
+	@Smoke
+	public void testPlaylistDelete() throws Throwable {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_sleep_playlist);
+		solo_.waitForActivity("PlaylistViewer");
+		solo_.clickLongInList(0);
+		//up
+		solo_.clickInList(2);
+		//TODO: add check
+		solo_.takeScreenShot();
+	}
+	
 	@Smoke
 	public void testReloadPlaylist() {
 		startPreferenceActivity();
