@@ -170,8 +170,13 @@ public class TestPortraitUI
 	public void testSitePreference() throws Exception {
 		startPreferenceActivity();
 		selectPreference(R.string.playlist_path_title);
+		solo_.sleep(500);
 		//TODO: add more specific assert
+		solo_.clickInList(0);
+		solo_.clickInList(1);
+		solo_.clickInList(2);
 		solo_.takeScreenShot();
+		solo_.clickOnButton("OK");
 	}
 	
 	@Smoke
@@ -215,14 +220,43 @@ public class TestPortraitUI
 		//TODO: check volume
 	}
 
+	public void testSleepTimerPreference() throws Exception {
+		startPreferenceActivity();
+		selectPreference(R.string.pref_sleeptime);
+		solo_.sleep(500);
+		TextView view = solo_.clickInList(0).get(0);
+		String minStr = view.getText().toString();
+		int i = 0;
+		for(i = 0; i < minStr.length(); i++) {
+			char c = minStr.charAt(i);
+			if(c < '0' || '9' < c) {
+				break;
+			}
+		}
+		String minNum = minStr.substring(0, i);
+		solo_.goBack();
+		//TODO: 
+		solo_.clickOnView(solo_.getView(R.id.alarm_button));
+		solo_.sleep(2000);
+		TextView sleepTimeLabel = (TextView)solo_.getView(R.id.sleep_time_label);
+		Assert.assertTrue("check sleep label", sleepTimeLabel.getText().toString().contains(minStr));
+	}
 
 	//add double tap test of webview
 	@Smoke
-	public void testDefaultTimePreference() throws Exception {
+	public void testWakeupTimePreference() throws Exception {
+		int targetHour = 6;
+		int targetMin = 40;
 		startPreferenceActivity();
 		selectPreference(R.string.pref_default_time_title);
+		solo_.sleep(1000);
 		solo_.takeScreenShot();
-		//TODO: change time
+		solo_.setTimePicker(0, targetHour, targetMin);
+		solo_.clickOnButton("OK");
+		solo_.goBack();
+		TimePicker mainPicker = solo_.getCurrentTimePickers().get(0);
+		Assert.assertEquals(mainPicker.getCurrentHour(), Integer.valueOf(targetHour));
+		Assert.assertEquals(mainPicker.getCurrentMinute(), Integer.valueOf(targetMin));
 	}
 
 	@Smoke
@@ -275,17 +309,18 @@ public class TestPortraitUI
 		startPreferenceActivity();
 		selectPreference(R.string.help_title);
 		solo_.sleep(4000);
-		solo_.takeScreenShot();
+		//TODO: check that browser starts
 	}
 	
 	public void testVersion() throws Exception {
 		startPreferenceActivity();
 		selectPreference(R.string.malarm_version_title);
+		solo_.sleep(500);
 		ImageView view = solo_.getImage(1);
+		solo_.takeScreenShot();
 		solo_.clickOnView(view);
 		//TODO: check that browser starts
 		solo_.sleep(4000);
-		solo_.takeScreenShot();
 	}
 	
 	//TODO: fix!
