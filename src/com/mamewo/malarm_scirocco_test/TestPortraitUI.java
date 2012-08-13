@@ -38,7 +38,6 @@ public class TestPortraitUI
 
 	@Override
 	public void tearDown() throws Exception {
-		System.out.println("tearDown is called");
 		try {
 			//Robotium will finish all the activities that have been opened
 			solo_.finalize();
@@ -57,7 +56,6 @@ public class TestPortraitUI
 		do {
 			ArrayList<TextView> list = solo_.getCurrentTextViews(null);
 			for (TextView listText : list) {
-				Log.i(TAG, "listtext: " + listText.getText());
 				if(targetTitle.equals(listText.getText())){
 					view = listText;
 					break;
