@@ -1,26 +1,27 @@
-===============================================================================
- malarm_scirocco_test - UI test of malarm application
-===============================================================================
+malarm_scirocco_test - UI test of malarm application
+====================================================
 
 What is this?
---------------------
+-------------
 This is a UI test of malarm using Scirocco and Robotium library.
 
 How to clone
---------------------
-1. Clone malarm
-    git clone git://github.com/mamewotoko/malarm.git malarm
-2. In the cloned directory, clone submoudle
- cd malarm
- git submodule init
- git submodule update
-3. malarm_scirocco_test is cloned in test/malarm_scirocco_test directory.
-4. put local.propeties file which specifes sdk.dir
-5. Download robotium-solo-xx.jar and scirocco_2.0.jar file 
- e.g. execute libs/setup.sh in lib directory
+-------------
+1. Clone malarm and submodule
 
-How to run:
---------------------
+    ```
+    git clone git://github.com/mamewotoko/malarm.git malarm
+    cd malarm
+    git submodule init
+    git submodule update
+    ```
+2. malarm_scirocco_test is cloned in test/malarm_scirocco_test directory.
+3. put local.propeties file which specifes sdk.dir
+4. Download robotium-solo-xx.jar and scirocco_2.0.jar file 
+   e.g. execute ` libs/setup.sh ` in lib directory
+
+Run
+---
 ### Eclipse
 1. Start eclipse and add libs/robotium-solo-xx.jar and scirocco_2.0.jar into build path
 2. Build (Run as Android JUnit test?)
@@ -36,7 +37,7 @@ How to run:
 4. Screen shot is stored in scricco directory of SD card of target device
 
 TODO
---------------------
+----
 * get memory info?
 
 Memo
@@ -53,10 +54,16 @@ adb shell monkey -p com.mamewo.malarm24 -v 10000
 
 Reference
 --------------------
-* Robotium: http://code.google.com/p/robotium/
-* Scirocco: http://code.google.com/p/scirocco/
-
+* [Robotium](http://code.google.com/p/robotium/)
+* [Scirocco](http://code.google.com/p/scirocco/)
+* [Spoon](https://github.com/square/spoon)
+  * Alternative tool of scirocco
+  * Spoon is able to run test on multiple devices connected to host and gather test result
+  * Report HTML is fancy
+  * Coverage function is added but I cannot check that it works
+* [merge_spoon.py](https://github.com/mamewotoko/podplayer/blob/master/ci/snapci/merge_spoon.py)
+  * merge multiple spoon html files into one html
+  
 ----
 Takashi Masuyama < mamewotoko@gmail.com >  
-http://www002.upp.so-net.ne.jp/mamewo/
-
+http://mamewo.ddo.jp/
